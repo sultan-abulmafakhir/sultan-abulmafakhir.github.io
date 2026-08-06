@@ -338,6 +338,24 @@
 
   <!-- SCRIPT FRONTEND INTEGRATION & SPREADSHEET SYNC -->
   <script>
+    function formatDriveUrl(url) {
+      if (!url) return 'https://via.placeholder.com/300x200?text=No+Image';
+      
+      // Jika URL menggunakan format file/d/ID_FILE/view
+      if (url.includes('/file/d/')) {
+        const fileId = url.split('/file/d/')[1].split('/')[0];
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+      } 
+      
+      // Jika URL menggunakan format id=ID_FILE
+      if (url.includes('id=')) {
+        const fileId = url.split('id=')[1].split('&')[0];
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+      }
+
+      return url;
+    }
+
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzDUp6pM7K6s5M4lzCqJenQ8zWWumtzDp5bHYX4-A7hAzVA9r6fk7rLrwQOfT8eaAkjfQ/exec";
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -448,23 +466,39 @@
         const beritaList = await resBerita.json();
         const container = document.getElementById('berita-container');
         
-        if(Array.isArray(beritaList) && beritaList.length > 0 && container) {
-          container.innerHTML = beritaList.map(item => `
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
-              <img src="${item.GambarUrl || 'https://via.placeholder.com/400x200?text=Gambar+Berita'}" class="w-full h-48 object-cover" alt="${item.Judul || ''}">
-              <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div>
-                  <span class="text-[10px] font-bold text-nuGreen uppercase">${item.Kategori || 'Artikel'}</span>
-                  <h3 class="font-bold text-gray-800 text-base mt-1 line-clamp-2">${item.Judul || ''}</h3>
-                  <p class="text-gray-600 text-xs mt-2 line-clamp-3">${item.Isi || ''}</p>
-                </div>
-                <div class="text-[11px] text-gray-400 pt-3 border-t border-gray-50 flex justify-between">
-                  <span>${item.Tanggal || ''}</span>
-                  <span>${item.Penulis || 'Admin'}</span>
+        if (Array.isArray(beritaList) && beritaList.length > 0 && container) {
+          container.innerHTML = beritaList.map(item => {
+            // Format URL Drive menjadi Direct URL
+            let imgSrc = 'https://via.placeholder.com/400x200?text=Gambar+Berita';
+            if (item.GambarUrl) {
+              if (item.GambarUrl.includes('/file/d/')) {
+                const fileId = item.GambarUrl.split('/file/d/')[1].split('/')[0];
+                imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
+              } else if (item.GambarUrl.includes('id=')) {
+                const fileId = item.GambarUrl.split('id=')[1].split('&')[0];
+                imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
+              } else {
+                imgSrc = item.GambarUrl;
+              }
+            }
+
+            return `
+              <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
+                <img src="${imgSrc}" class="w-full h-48 object-cover" alt="${item.Judul || ''}" onerror="this.src='https://via.placeholder.com/400x200?text=Gagal+Muat+Gambar'">
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div>
+                    <span class="text-[10px] font-bold text-nuGreen uppercase">${item.Kategori || 'Artikel'}</span>
+                    <h3 class="font-bold text-gray-800 text-base mt-1 line-clamp-2">${item.Judul || ''}</h3>
+                    <p class="text-gray-600 text-xs mt-2 line-clamp-3">${item.Isi || ''}</p>
+                  </div>
+                  <div class="text-[11px] text-gray-400 pt-3 border-t border-gray-50 flex justify-between">
+                    <span>${item.Tanggal || ''}</span>
+                    <span>${item.Penulis || 'Admin'}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          `).join('');
+            `;
+          }).join('');
         }
       } catch(e) {
         console.error("Gagal sinkron Berita:", e);
