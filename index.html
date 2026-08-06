@@ -40,26 +40,47 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .font-arabic { font-family: 'Amiri', serif; }
+    @keyframes fillProgress {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  .animate-progress {
+    /* UBAH DI SINI: dari 3s menjadi 5s */
+    animation: fillProgress 2s linear forwards;
+  }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-  <!-- 1. SPLASH SCREEN (3 DETIK) -->
-  <div id="splash-screen" class="fixed inset-0 z-50 bg-nuGreen flex flex-col items-center justify-center transition-opacity duration-1000 text-white">
-    <div class="animate-bounce mb-4 text-center">
-      <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-2 shadow-2xl flex items-center justify-center bg-white    p-1">
+  <!-- 1. SPLASH SCREEN (TOTAL 5 DETIK) -->
+  <div id="splash-screen" class="fixed inset-0 z-50 bg-nuGreen flex flex-col items-center justify-center transition-opacity duration-1000 text-white p-4">
+    <div class="animate-pulse mb-8 text-center flex flex-col items-center">
+      
+      <!-- Logo -->
+      <div class="w-28 h-28 rounded-full overflow-hidden mb-2 shadow-1xl flex items-center justify-center bg-white p-1">
         <img 
-        src="https://lh3.googleusercontent.com/d/1I7aES5U297xdZphfm1LVxiMT3vU_sMs-" 
-        alt="Logo_SULAMA_Premium" 
-        class="w-full h-full object-contain"
-        onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=1I7aES5U297xdZphfm1LVxiMT3vU_sMs-';"
+          src="https://images.weserv.nl/?url=drive.google.com/uc?id=18FeftgRuYinK9sd1XBl6-aAP-g6eN09G" 
+          alt="Logo Ma'had Aly SULAMA" 
+          class="w-full h-full object-contain"
+          referrerpolicy="no-referrer"
         >
       </div>
-      <h2 class="text-2xl md:text-3xl font-arabic tracking-wider">المعهد العالي السلطان ابو المفاخر</h2>
-      <p class="text-sm text-kuningMuda mt-2 font-arabic text-lg">Ma'had Aly Sultan Abul Mafakhir</p>
+
+      <!-- Tulisan Arab -->
+      <h2 class="text-4xl md:text-4xl font-arabic tracking-wider leading-tight">المعهد العالي السلطان ابو المفاخر</h2>
+      
+      <!-- Tulisan Latin -->
+      <p class="text-2xl md:text-4xl text-kuningMuda mt-4 font-arabic">Ma'had Aly Sultan Abul Mafakhir</p>
     </div>
-    <div class="w-48 bg-nuGreen-dark h-2 rounded-full overflow-hidden">
-      <div class="bg-kuningMuda h-full animate-pulse w-full"></div>
+
+    <!-- PROGRESS BAR BERJALAN SAMPAI PENUH -->
+    <div class="w-64 md:w-96 bg-nuGreen-dark h-2 rounded-full overflow-hidden shadow-inner">
+      <div class="bg-kuningMuda h-full w-0 animate-progress"></div>
     </div>
   </div>
 
@@ -73,7 +94,12 @@
       <div class="flex items-center justify-between pb-4 border-b border-black/10">
         <div class="flex items-center space-x-2">
           <div class="w-9 h-9 bg-nuGreen rounded-full flex items-center justify-center text-kuningMuda font-bold text-base shadow-sm">
-            M
+            <img 
+              src="https://images.weserv.nl/?url=drive.google.com/uc?id=18FeftgRuYinK9sd1XBl6-aAP-g6eN09G" 
+              alt="Logo Ma'had Aly SULAMA" 
+              class="w-full h-full object-contain"
+              referrerpolicy="no-referrer"
+            >
           </div>
           <span class="font-bold text-nuGreen text-sm">Ma'had Aly SULAMA</span>
         </div>
@@ -112,14 +138,17 @@
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 sm:w-12 sm:h-12 bg-nuGreen rounded-full flex items-center justify-center text-kuningMuda font-bold text-lg sm:text-xl shadow-md shrink-0">
             <img 
-              src="https://lh3.googleusercontent.com/d/1I7aES5U297xdZphfm1LVxiMT3vU_sMs-" 
-              alt="Logo_SULAMA_Premium" 
+              src="https://images.weserv.nl/?url=drive.google.com/uc?id=18FeftgRuYinK9sd1XBl6-aAP-g6eN09G" 
+              alt="Logo Ma'had Aly SULAMA" 
               class="w-full h-full object-contain"
-              onerror="this.onerror=null; this.src='https://drive.google.com/uc?export=view&id=1I7aES5U297xdZphfm1LVxiMT3vU_sMs-';"
-              >
+              referrerpolicy="no-referrer"
+            >
           </div>
           <div>
-            <span class="text-sm sm:text-lg font-arabic text-nuGreen block leading-tight">المعهد العالي السلطان ابو المفاخر</span>
+            <!-- Tulisan Arab (Dinaikkan ukurannya) -->
+            <span class="text-1xl sm:text-2xl font-arabic text-nuGreen block leading-tight font-bold">المعهد العالي السلطان ابو المفاخر</span>
+            
+            <!-- Subtitle Latin (Dinaikkan ukurannya) -->
             <span class="text-[10px] sm:text-xs text-gray-800 font-medium block">Mencetak generasi yang tafaqquh fiddin</span>
           </div>
         </div>
@@ -155,7 +184,7 @@
   <!-- 3. HERO / BERANDA -->
   <section id="beranda" class="relative bg-gradient-to-r from-nuGreen-dark to-nuGreen text-white py-24 px-4">
     <div class="max-w-7xl mx-auto text-center space-y-6">
-      <p class="font-arabic text-2xl md:text-3xl text-kuningMuda">تفقه في الدين - المعهد العالي</p>
+      <p class="font-extrabold text-4xl md:text-5xl text-kuningMuda">MA'HAD ALY SULTAN ABUL MAFAKHIR</p>
       <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Mencetak Kader Ulama Tafaqquh Fiddin</h1>
       <p class="max-w-2xl mx-auto text-gray-100 text-sm md:text-base">
         Mewujudkan generasi akademisi Islam yang berintegritas, menguasai turats keislaman, dan siap menjawab tantangan peradaban modern.
