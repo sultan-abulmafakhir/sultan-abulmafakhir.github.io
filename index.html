@@ -468,17 +468,19 @@
         
         if (Array.isArray(beritaList) && beritaList.length > 0 && container) {
           container.innerHTML = beritaList.map(item => {
-            // Format URL Drive menjadi Direct URL
+            // Ambil URL gambar dan konversi ke Direct View CDN Google Drive
+            const rawUrl = item.GambarUrl || item.ImageUrl || '';
             let imgSrc = 'https://via.placeholder.com/400x200?text=Gambar+Berita';
-            if (item.GambarUrl) {
-              if (item.GambarUrl.includes('/file/d/')) {
-                const fileId = item.GambarUrl.split('/file/d/')[1].split('/')[0];
+
+            if (rawUrl) {
+              if (rawUrl.includes('/file/d/')) {
+                const fileId = rawUrl.split('/file/d/')[1].split('/')[0];
                 imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
-              } else if (item.GambarUrl.includes('id=')) {
-                const fileId = item.GambarUrl.split('id=')[1].split('&')[0];
+              } else if (rawUrl.includes('id=')) {
+                const fileId = rawUrl.split('id=')[1].split('&')[0];
                 imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
               } else {
-                imgSrc = item.GambarUrl;
+                imgSrc = rawUrl;
               }
             }
 
@@ -510,16 +512,35 @@
         const galeriList = await resGaleri.json();
         const container = document.getElementById('galeri-container');
         
-        if(Array.isArray(galeriList) && galeriList.length > 0 && container) {
-          container.innerHTML = galeriList.map(item => `
-            <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm group">
-              <img src="${item.ImageUrl || item.GambarUrl || 'https://via.placeholder.com/300x200'}" class="w-full h-36 object-cover group-hover:scale-105 transition duration-300" alt="${item.Judul || ''}">
-              <div class="p-3">
-                <span class="text-[9px] bg-gray-100 text-gray-600 font-semibold px-1.5 py-0.5 rounded">${item.Kategori || 'Kegiatan'}</span>
-                <p class="text-xs font-bold text-gray-800 truncate mt-1">${item.Judul || ''}</p>
+        if (Array.isArray(galeriList) && galeriList.length > 0 && container) {
+          container.innerHTML = galeriList.map(item => {
+            // Ambil string URL awal
+            const rawUrl = item.ImageUrl || item.GambarUrl || '';
+            let imgSrc = 'https://via.placeholder.com/300x200?text=Gambar+Galeri';
+
+            // Konversi URL Google Drive ke format Direct View CDN
+            if (rawUrl) {
+              if (rawUrl.includes('/file/d/')) {
+                const fileId = rawUrl.split('/file/d/')[1].split('/')[0];
+                imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
+              } else if (rawUrl.includes('id=')) {
+                const fileId = rawUrl.split('id=')[1].split('&')[0];
+                imgSrc = `https://lh3.googleusercontent.com/d/${fileId}`;
+              } else {
+                imgSrc = rawUrl;
+              }
+            }
+
+            return `
+              <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm group">
+                <img src="${imgSrc}" class="w-full h-36 object-cover group-hover:scale-105 transition duration-300" alt="${item.Judul || ''}" onerror="this.src='https://via.placeholder.com/300x200?text=Gagal+Muat'">
+                <div class="p-3">
+                  <span class="text-[9px] bg-gray-100 text-gray-600 font-semibold px-1.5 py-0.5 rounded">${item.Kategori || 'Kegiatan'}</span>
+                  <p class="text-xs font-bold text-gray-800 truncate mt-1">${item.Judul || ''}</p>
+                </div>
               </div>
-            </div>
-          `).join('');
+            `;
+          }).join('');
         }
       } catch(e) {
         console.error("Gagal sinkron Galeri:", e);
