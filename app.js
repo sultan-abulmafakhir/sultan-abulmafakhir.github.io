@@ -651,7 +651,7 @@ function renderStrukturAkademikView() {
   const subordinates = items.slice(1);
   const fallbackAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80';
 
-  // Card Generator untuk Bagan (Tambahkan atribut onclick & cursor-pointer)
+  // Card Generator untuk Bagan
   const createNodeCard = (person, isTop = false, index = 0) => {
     const jsonString = JSON.stringify(person).replace(/"/g, '&quot;');
     return `
@@ -662,6 +662,8 @@ function renderStrukturAkademikView() {
         >
           <div class="h-2 ${isTop ? 'bg-gradient-to-r from-amber-400 via-emerald-600 to-amber-500' : 'bg-emerald-800'}"></div>
           <div class="p-5 text-center flex flex-col items-center">
+            
+            <!-- Foto Profil -->
             <div class="relative mb-3">
               <div class="w-20 h-20 rounded-full p-1 ${isTop ? 'bg-gradient-to-tr from-amber-400 to-emerald-700' : 'bg-emerald-100'} shadow-md">
                 <img 
@@ -678,13 +680,15 @@ function renderStrukturAkademikView() {
               ` : ''}
             </div>
 
-            <span class="inline-block px-3 py-0.5 rounded-full ${isTop ? 'bg-amber-100 text-amber-900 font-extrabold' : 'bg-emerald-50 text-emerald-800 font-bold'} text-[10px] tracking-wider uppercase mb-1 border border-amber-200">
-              ${person.jabatan}
-            </span>
-
-            <h4 class="font-bold text-slate-800 text-sm md:text-base leading-snug group-hover:text-emerald-800 transition">
+            <!-- 1. NAMA (Di atas + Garis Bawah/Underline) -->
+            <h4 class="font-extrabold text-slate-800 text-sm md:text-base leading-snug group-hover:text-emerald-800 transition underline decoration-2 underline-offset-4 border-b border-slate-200/60 pb-1.5 mb-2">
               ${person.nama}
             </h4>
+
+            <!-- 2. JABATAN (Di bawah Nama) -->
+            <span class="inline-block px-3 py-1 rounded-full ${isTop ? 'bg-amber-100 text-amber-900 font-extrabold' : 'bg-emerald-50 text-emerald-800 font-bold'} text-[10px] tracking-wider uppercase border border-amber-200/80 mb-1">
+              ${person.jabatan}
+            </span>
 
             ${person.nidn ? `<p class="text-[10px] text-slate-400 font-mono mt-1">NIDN: ${person.nidn}</p>` : ''}
             
@@ -762,10 +766,16 @@ function renderStrukturAkademikView() {
           <img id="modal-img" src="" alt="" class="w-full h-full object-contain" />
         </div>
 
-        <!-- Detail Informasi -->
+        <!-- Detail Informasi Modal -->
         <div class="p-6 text-center space-y-3">
-          <span id="modal-jabatan" class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider"></span>
-          <h3 id="modal-nama" class="text-xl font-extrabold text-slate-900 leading-snug"></h3>
+          <!-- Nama (Di atas + Garis Bawah/Underline) -->
+          <h3 id="modal-nama" class="text-xl font-extrabold text-slate-900 leading-snug underline decoration-2 underline-offset-4 inline-block border-b border-slate-100 pb-1"></h3>
+          
+          <!-- Jabatan (Di bawah) -->
+          <div>
+            <span id="modal-jabatan" class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider"></span>
+          </div>
+
           <p id="modal-nidn" class="text-xs text-slate-400 font-mono"></p>
           <p id="modal-ket" class="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100 hidden"></p>
         </div>
